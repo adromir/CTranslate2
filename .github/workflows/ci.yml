@@ -15,14 +15,13 @@ jobs:
           submodules: recursive
 
       - name: Build wheels
-        uses: pypa/cibuildwheel@v3.2.1
+        uses: pypa/cibuildwheel@v3.4.0
         with:
           package-dir: python
           output-dir: python/wheelhouse
         env:
           CIBW_BEFORE_ALL_LINUX: python/tools/prepare_build_environment_linux.sh
           CIBW_BEFORE_BUILD: pip install -r python/install_requirements.txt
-          CIBW_MANYLINUX_X86_64_IMAGE: manylinux_2_28
           CIBW_ARCHS: x86_64
           CIBW_SKIP: "*-musllinux_* *cp36* *cp37* *cp38*"
 
@@ -45,7 +44,7 @@ jobs:
           submodules: recursive
 
       - name: Build wheels
-        uses: pypa/cibuildwheel@v3.2.1
+        uses: pypa/cibuildwheel@v3.4.0
         with:
           package-dir: python
           output-dir: python/wheelhouse
@@ -55,7 +54,6 @@ jobs:
           CIBW_BEFORE_ALL_LINUX: python/tools/prepare_build_environment_linux_rocm.sh
           CIBW_BEFORE_ALL_WINDOWS: bash python/tools/prepare_build_environment_windows_rocm.sh
           CIBW_BEFORE_BUILD: pip install -r python/install_requirements.txt
-          CIBW_MANYLINUX_X86_64_IMAGE: manylinux_2_28
           CIBW_ARCHS: auto64
           CIBW_SKIP: "*-musllinux_*"
           CIBW_REPAIR_WHEEL_COMMAND_LINUX: 'auditwheel repair -w {dest_dir} --exclude "/opt/rocm/lib/lib*" {wheel}'
