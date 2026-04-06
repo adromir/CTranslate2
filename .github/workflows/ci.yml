@@ -13,7 +13,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-24.04, windows-2025]
-        python-version: [cp39-*, cp310-*, cp311-*, cp312-*, cp313-*]
+        python-version: [cp39, cp310, cp311, cp312, cp313]
 
     steps:
       - uses: actions/checkout@v6
@@ -43,7 +43,7 @@ jobs:
           package-dir: python
           output-dir: python/wheelhouse
         env:
-          CIBW_BUILD: ${{ matrix.python-version }}
+          CIBW_BUILD: ${{ matrix.python-version }}-*
           CIBW_ENVIRONMENT_LINUX: >
             ROCM_PATH=/opt/rocm 
             LD_LIBRARY_PATH=/opt/rocm/lib/llvm/lib:/github/workspace/deps-cache/lib:$LD_LIBRARY_PATH 

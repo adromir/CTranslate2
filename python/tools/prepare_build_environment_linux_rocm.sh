@@ -19,16 +19,16 @@ export LIBRARY_PATH="/opt/rh/gcc-toolset-14/root/usr/lib/gcc/x86_64-redhat-linux
 
 tee /etc/yum.repos.d/rocm.repo <<EOF
 [rocm]
-name=ROCm 7.2.0 repository
-baseurl=https://repo.radeon.com/rocm/el8/7.2/main
+name=ROCm 7.2.1 repository
+baseurl=https://repo.radeon.com/rocm/el8/7.2.1/main
 enabled=1
 priority=50
 gpgcheck=1
 gpgkey=https://repo.radeon.com/rocm/rocm.gpg.key
 
 [amdgraphics]
-name=AMD Graphics 7.2.0 repository
-baseurl=https://repo.radeon.com/graphics/7.2/el/8/main/x86_64/
+name=AMD Graphics 7.2.1 repository
+baseurl=https://repo.radeon.com/graphics/7.2.1/el/8/main/x86_64/
 enabled=1
 priority=50
 gpgcheck=1
