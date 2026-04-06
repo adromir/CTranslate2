@@ -20,6 +20,23 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Cache ccache
+        uses: actions/cache@v4
+        with:
+          path: .ccache
+          key: ccache-${{ matrix.os }}-${{ matrix.python-version }}-${{ github.sha }}
+          restore-keys: |
+            ccache-${{ matrix.os }}-${{ matrix.python-version }}-
+            ccache-${{ matrix.os }}-
+
+      - name: Cache Dependencies
+        uses: actions/cache@v4
+        with:
+          path: deps-cache
+          key: deps-${{ matrix.os }}-${{ github.sha }}
+          restore-keys: |
+            deps-${{ matrix.os }}-
+
       - name: Build wheels
         uses: pypa/cibuildwheel@v3.4.0
         with:
@@ -27,8 +44,16 @@ jobs:
           output-dir: python/wheelhouse
         env:
           CIBW_BUILD: ${{ matrix.python-version }}
-          CIBW_ENVIRONMENT_LINUX: ROCM_PATH=/opt/rocm LD_LIBRARY_PATH=/opt/rocm/lib/llvm/lib:$LD_LIBRARY_PATH
-          CIBW_ENVIRONMENT_WINDOWS: CTRANSLATE2_ROOT='${{ github.workspace }}\install'
+          CIBW_ENVIRONMENT_LINUX: >
+            ROCM_PATH=/opt/rocm 
+            LD_LIBRARY_PATH=/opt/rocm/lib/llvm/lib:/github/workspace/deps-cache/lib:$LD_LIBRARY_PATH 
+            CCACHE_DIR=/github/workspace/.ccache
+            DEPS_INSTALL_DIR=/github/workspace/deps-cache
+            CMAKE_PREFIX_PATH=/github/workspace/deps-cache
+          CIBW_ENVIRONMENT_WINDOWS: >
+            CTRANSLATE2_ROOT='${{ github.workspace }}\install'
+            CCACHE_DIR='${{ github.workspace }}\.ccache'
+            DEPS_INSTALL_DIR='${{ github.workspace }}\deps-cache'
           CIBW_BEFORE_ALL_LINUX: python/tools/prepare_build_environment_linux_rocm.sh
           CIBW_BEFORE_ALL_WINDOWS: bash python/tools/prepare_build_environment_windows_rocm.sh
           CIBW_BEFORE_BUILD: pip install -r python/install_requirements.txt
